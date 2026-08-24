@@ -1,6 +1,7 @@
 package com.tausif.AdminMicroService.service;
 
 
+import com.tausif.AdminMicroService.entity.Admin;
 import com.tausif.AdminMicroService.repository.AdminRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,4 +12,15 @@ public class AdminService {
 
     @Autowired
     private AdminRepo adminRepo;
+
+    public boolean saveAdmin(Admin admin) {
+
+        Admin a = adminRepo.findById(admin.getEmail()).orElse(null);
+        if(a == null){
+            adminRepo.save(admin);
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
