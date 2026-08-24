@@ -4,10 +4,7 @@ package com.tausif.AdminMicroService.controller;
 import com.tausif.AdminMicroService.entity.Admin;
 import com.tausif.AdminMicroService.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
@@ -25,6 +22,12 @@ public class AdminController {
     @PostMapping("/adminRegister")
     public boolean adminRegister(@RequestBody Admin admin){
         return adminService.saveAdmin(admin);
+    }
+
+    @PostMapping("/login")
+    public Admin login(@RequestParam String email, @RequestParam String password){
+        Admin a = adminService.login(email, password);
+        return a;
     }
 
 }

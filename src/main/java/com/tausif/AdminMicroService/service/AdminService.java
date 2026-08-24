@@ -23,4 +23,21 @@ public class AdminService {
             return false;
         }
     }
+
+    public Admin login(String email, String password) {
+
+        Admin a = adminRepo.findById(email).orElse(null);
+        if(a == null){
+            a = adminRepo.findByUsername(email);
+        }
+
+        if(a == null){
+            return null;
+        }
+
+        if(a.getPassword().equals(password)){
+            return a;
+        }
+        return null;
+    }
 }
