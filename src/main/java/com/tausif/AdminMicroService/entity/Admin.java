@@ -19,7 +19,7 @@ public class Admin {
     private String name;
     private String username;
     private String password;
-    @CreationTimestamp
+//    @CreationTimestamp
     private LocalDateTime createdAt;
     private Boolean isActive;
 

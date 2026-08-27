@@ -1,9 +1,12 @@
 package com.tausif.AdminMicroService.controller;
 
 
+import com.tausif.AdminMicroService.dto.AdminReqDto;
+import com.tausif.AdminMicroService.dto.AdminResDto;
 import com.tausif.AdminMicroService.entity.Admin;
 import com.tausif.AdminMicroService.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,8 +23,9 @@ public class AdminController {
     }
 
     @PostMapping("/adminRegister")
-    public boolean adminRegister(@RequestBody Admin admin){
-        return adminService.saveAdmin(admin);
+    public ResponseEntity<AdminResDto> adminRegister(@RequestBody AdminReqDto adminReqDto){
+        AdminResDto adminResDto = adminService.createAdmin(adminReqDto);
+        return ResponseEntity.ok(adminResDto);
     }
 
     @PostMapping("/login")
