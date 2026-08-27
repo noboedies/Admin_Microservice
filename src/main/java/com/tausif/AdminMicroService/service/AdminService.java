@@ -4,11 +4,15 @@ package com.tausif.AdminMicroService.service;
 import com.tausif.AdminMicroService.dto.AdminReqDto;
 import com.tausif.AdminMicroService.dto.AdminResDto;
 import com.tausif.AdminMicroService.entity.Admin;
+import com.tausif.AdminMicroService.entity.Complaint;
 import com.tausif.AdminMicroService.repository.AdminRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class AdminService {
@@ -16,6 +20,9 @@ public class AdminService {
 
     @Autowired
     private AdminRepo adminRepo;
+
+    @Autowired
+    private RestClient restClient;
 
     public boolean saveAdmin(Admin admin) {
 
@@ -77,5 +84,13 @@ public class AdminService {
         adminResDto.setUsername(admin.getUsername());
         adminResDto.setMessage("User Created Successfully");
         return adminResDto;
+    }
+
+    public List<Complaint> getAllComplaints() {
+        return restClient.get()
+                .uri("http://localhost:2027/complaint/getAllComplaints")
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<Complaint>>() {
+                });
     }
 }
