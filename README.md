@@ -6,6 +6,8 @@ The **Admin MicroService** is one of the backend services of the Complaint Manag
 
 - Admin registration
 - Duplicate email prevention
+- Request and response DTOs
+- DTO-to-entity and entity-to-DTO mapping
 - Admin login
 - Login using email or username
 - MySQL persistence
@@ -63,7 +65,9 @@ Admin
 ├── email
 ├── name
 ├── username
-└── password
+├── password
+├── createdAt
+└── isActive
 ```
 
 The email is used as the primary key:
@@ -74,6 +78,60 @@ private String email;
 ```
 
 Therefore, every admin must have a unique email address.
+
+## DTO Layer
+
+The Admin MicroService now uses separate request and response DTOs for admin registration.
+
+### AdminReqDto
+
+`AdminReqDto` represents data received from the client:
+
+```text
+AdminReqDto
+├── email
+├── name
+├── username
+└── password
+```
+
+### AdminResDto
+
+`AdminResDto` represents data returned to the client:
+
+```text
+AdminResDto
+├── email
+├── name
+├── username
+└── message
+```
+
+The password is not included in `AdminResDto`.
+
+### Mapping
+
+The service currently performs explicit mapping:
+
+```text
+AdminReqDto
+      ↓
+mapToEntity()
+      ↓
+Admin
+      ↓
+Database
+
+Admin
+      ↓
+mapToDto()
+      ↓
+AdminResDto
+      ↓
+Client
+```
+
+This keeps the persistence entity separate from the API request/response models.
 
 ## API
 
@@ -113,10 +171,10 @@ Example:
 
 ```json
 {
-    "email": "manager@complaintsystem.com",
-    "name": "Rahul Sharma",
-    "username": "rahul_admin",
-    "password": "Rahul@2026"
+  "email": "manager@complaintsystem.com",
+  "name": "Rahul Sharma",
+  "username": "rahul_admin",
+  "password": "Rahul@2026"
 }
 ```
 
@@ -161,10 +219,10 @@ Example successful response:
 
 ```json
 {
-    "email": "admin@gmail.com",
-    "name": "System Admin",
-    "password": "Admin@123",
-    "username": "admin123"
+  "email": "admin@gmail.com",
+  "name": "System Admin",
+  "password": "Admin@123",
+  "username": "admin123"
 }
 ```
 
@@ -224,10 +282,10 @@ Test data:
 
 ```json
 {
-    "email": "manager@complaintsystem.com",
-    "name": "Rahul Sharma",
-    "username": "rahul_admin",
-    "password": "Rahul@2026"
+  "email": "manager@complaintsystem.com",
+  "name": "Rahul Sharma",
+  "username": "rahul_admin",
+  "password": "Rahul@2026"
 }
 ```
 
@@ -273,10 +331,10 @@ Example response:
 
 ```json
 {
-    "email": "admin@gmail.com",
-    "name": "System Admin",
-    "password": "Admin@123",
-    "username": "admin123"
+  "email": "admin@gmail.com",
+  "name": "System Admin",
+  "password": "Admin@123",
+  "username": "admin123"
 }
 ```
 
@@ -316,18 +374,32 @@ Welcome to Admin MicroService
 Postman / Frontend
         │
         │ POST /admin/adminRegister
+        │ JSON
         ▼
 AdminController
+        │
+        ▼
+AdminReqDto
         │
         ▼
 AdminService
         │
         ├── Check email
+        ├── mapToEntity()
+        ▼
+Admin Entity
+        │
         ▼
 AdminRepository
         │
         ▼
 MySQL
+        │
+        ▼
+AdminResDto
+        │
+        ▼
+Response
 ```
 
 ### Login
@@ -411,6 +483,11 @@ The current development setup uses a single MySQL database schema while the serv
 - [x] Support login using email
 - [x] Support login using username
 - [x] Verify password
+- [x] Introduce request DTO (`AdminReqDto`)
+- [x] Introduce response DTO (`AdminResDto`)
+- [x] Map request DTO to Admin entity
+- [x] Map Admin entity to response DTO
+- [x] Prevent password exposure in registration response
 - [x] Test admin registration with Postman
 - [x] Test admin login with Postman
 - [x] Test service availability with Postman
@@ -427,7 +504,6 @@ The current development setup uses a single MySQL database schema while the serv
 - [ ] Request validation
 - [ ] Global exception handling
 - [ ] Password hashing
-- [ ] DTOs
 - [ ] Unit tests
 - [ ] Integration tests
 - [ ] API documentation
@@ -450,6 +526,8 @@ The Admin MicroService currently supports:
 
 - Admin registration
 - Duplicate email prevention
+- Request and response DTOs
+- DTO-to-entity and entity-to-DTO mapping
 - Login using email
 - Login using username
 - Password verification
